@@ -8,11 +8,13 @@ import com.nikhil.swachhbharatbackend.repositories.UserRepository;
 import com.nikhil.swachhbharatbackend.services.PickupLocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -34,7 +36,8 @@ public class PickupLocationServiceImpl implements PickupLocationService {
         if (Stream.of(pickupLocation.getLandmark(), pickupLocation.getStreet(),
                 pickupLocation.getCity(), pickupLocation.getState(),
                 pickupLocation.getCountry(), pickupLocation.getDateAdded(),
-                pickupLocation.getUserId(),pickupLocation.getLatitude(),pickupLocation.getLongitude()).anyMatch((p) -> p == null || String.valueOf(p).isBlank())) {
+                pickupLocation.getUserId(),pickupLocation.getLatitude(),pickupLocation.getLongitude())
+                .anyMatch((p) -> p == null || String.valueOf(p).isBlank())) {
             throw new IllegalArgumentException("Mandatory fields can't be empty!");
         } else if (pickupLocation.getDateCleaned() != null && !pickupLocation.getDateCleaned().isBlank()) {
             throw new IllegalArgumentException("Date Cleaned can be updated, only after adding the location first!");
@@ -71,6 +74,7 @@ public class PickupLocationServiceImpl implements PickupLocationService {
         return pickupLocationRepository.findByCityIn(cities);
     }
 
+    @Transactional
     @Override
     public PickupLocation updatePickupLocation(Long pickLocId, PickupLocation pickupLocation) throws NotFoundException, IllegalArgumentException, DateTimeParseException {
         Optional<PickupLocation> temp = pickupLocationRepository.findById(pickLocId);
@@ -93,7 +97,7 @@ public class PickupLocationServiceImpl implements PickupLocationService {
                     Optional<User> res = userRepository.findById(pickupLocation.getUserId());
                     if(res.isPresent()){
                         User user = res.get();
-                        user.setCoinsEarned(user.getCoinsEarned()+100);
+                        user.setCoinsEarned(user.getCoinsEarned()+20);
                         userRepository.save(user);
                     }
                     res = userRepository.findById(pickupLocation.getDriverId());
@@ -121,4 +125,15 @@ public class PickupLocationServiceImpl implements PickupLocationService {
             throw new NotFoundException("ERR_NOT_FOUND");
         }
     }
+
+//    @Override
+//    public void saveImageWithPickupLocId(byte[] imageData, Long pickupLocId) throws NotFoundException {
+//        Optional<PickupLocation> res = pickupLocationRepository.findById(pickupLocId);
+//        if(res.isEmpty()){
+//            throw new NotFoundException("PickupLocation Not Found for id "+pickupLocId);
+//        }
+//        PickupLocation pickupLocation = res.get();
+//        pickupLocation.setImage(imageData);
+//        pickupLocationRepository.save(pickupLocation);
+//    }
 }

@@ -6,9 +6,12 @@ import com.nikhil.swachhbharatbackend.repositories.RoleRepository;
 import com.nikhil.swachhbharatbackend.repositories.UserRepository;
 import com.nikhil.swachhbharatbackend.exceptions.NotFoundException;
 import com.nikhil.swachhbharatbackend.services.UserProfileService;
+import com.nikhil.swachhbharatbackend.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
@@ -30,7 +33,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         else if (user.getPassword() != null && !user.getPassword().isBlank() && user.getPassword().length() < 8)
             throw new IllegalArgumentException("Password should be minimum 8 characters long!");
-
+        else if(!Util.isValidPhoneNumber(user.getMobNumber()))
+            throw new IllegalArgumentException("Provide a valid phone number");
         else {
             User temp = userRepository.findByUsername(user.getUsername());
             if (temp == null) {
@@ -53,5 +57,10 @@ public class UserProfileServiceImpl implements UserProfileService {
                 return userRepository.save(temp);
             }
         }
+    }
+
+    @Override
+    public User getUserProfile(String username) throws NotFoundException, IllegalArgumentException {
+        return userRepository.findByUsername(username);
     }
 }

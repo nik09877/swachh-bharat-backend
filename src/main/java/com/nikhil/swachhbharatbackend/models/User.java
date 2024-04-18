@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -43,8 +44,8 @@ public class User implements UserDetails {
     @Column(name = "address", nullable = false, length = 255)
     public String address;
 
-    @Column(name = "coins_earned", length = 10)
-    public String coinsEarned;
+    @Column(name = "coins_earned")
+    public double coinsEarned;
 
     @Column(name = "pickup_cities")
     private String[] pickupCities;

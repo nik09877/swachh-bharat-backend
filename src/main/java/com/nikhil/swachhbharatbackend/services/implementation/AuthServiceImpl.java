@@ -9,6 +9,7 @@ import com.nikhil.swachhbharatbackend.models.User;
 import com.nikhil.swachhbharatbackend.repositories.RoleRepository;
 import com.nikhil.swachhbharatbackend.repositories.UserRepository;
 import com.nikhil.swachhbharatbackend.services.AuthService;
+import com.nikhil.swachhbharatbackend.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -49,6 +50,8 @@ public class AuthServiceImpl implements AuthService {
 
         else if (user.getPassword().length() < 8)
             throw new IllegalArgumentException("Password should be minimum 8 characters long!");
+        else if(!Util.isValidPhoneNumber(user.getMobNumber()))
+            throw new IllegalArgumentException("Provide a valid phone number");
 
         else {
             User temp = userRepository.findByUsername(user.getUsername());

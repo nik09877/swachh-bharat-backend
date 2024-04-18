@@ -20,4 +20,6 @@ public interface PickupLocationService {
 
     void deletePickupLocation(Long pickLocId) throws NotFoundException;
 
+    //void saveImageWithPickupLocId(byte[] imageData, Long pickupLocId) throws NotFoundException;
+
 }

@@ -1,5 +1,6 @@
 package com.nikhil.swachhbharatbackend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,10 +43,11 @@ public class PickupLocation {
     @Column(name = "date_cleaned", length = 30)
     private String dateCleaned;
 
-    @Column(name = "status", nullable = false, columnDefinition = "bit default 0")
+    @Column(name = "status", nullable = false, columnDefinition = "boolean default false")
     private boolean status;
 
-//    @Column(name = "image", nullable = false)
+//    @JsonIgnore
+//    @Column(name = "image", nullable = true)
 //    @Lob
 //    private byte[] image;
 
